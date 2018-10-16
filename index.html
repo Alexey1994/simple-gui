@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <div id="view2"></div>
+    <div id="view"></div>
+
+    <script src="main2.js"></script>
+
+    <script>
+        /*
+        draw(
+            view,
+
+            {
+                fields: {
+                    field: undefined
+                }
+            },
+
+            function(model) {
+                model.fields.push(1)
+
+                //console.log(this)
+
+                //model.fields = [{field: 'a'}, {field: 'b'}]
+            }
+        )*/
+
+/*
+        var page = draw(view, [
+            ['text', '123'],
+            ['div', [
+                ['text', '456'],
+                ['div', [
+                    ['text', 'green text <><<<>>>']
+                ]]
+            ]]
+        ])
+*/
+
+        function otherPage(parent) {
+            return draw(parent, [
+                ['text', '123']
+            ])
+        }
+
+        var page = draw(document.querySelector('#view'), [
+            [otherPage],
+            [otherPage]
+        ])
+
+        //page[0]
+
+        page[0][0] = 'rt'
+
+        //page[0] = 'Hi'
+        //page[1].style.color = 'red'
+        //console.log(page[1][1].style.color)
+
+        //page[1][1].style.color = 'green'
+        //page[1][1][0] = 'Alexey'
+
+        //page[1][0] = 'e'
+
+        //setTimeout(() => page[0] = 'e', 1000)
+    </script>
+</body>
+</html>
