@@ -3,8 +3,15 @@ function draw(parent, model) {
 
     model.forEach(function(item) {
         if(typeof item[0] == 'function') {
+            var evalString = 'item[0](parent'
+
+            for(var i = 1; i < item.length; ++i)
+                evalString += ',item[' + i + ']'
+
+            evalString += ')'
+
             bindings.push({
-                getter: item[0](parent)
+                getter: eval(evalString)
             })
         }
         else
@@ -29,6 +36,36 @@ function draw(parent, model) {
                 })
                 break
 
+            case 'grid':
+                var element = document.createElement('span')
+                var style = element.style
+                style.display = 'grid'
+                style.gridTemplateColumns = 'min-content min-content'
+                style.gridGap = '10px'
+                parent.appendChild(element)
+
+                var inner = draw(element, item[1])
+
+                /*var setter = new Proxy({}, {
+                    get: function(object, key) {
+                        return element.data
+                    },
+
+                    set: function(object, key, value) {
+                        element.data = value
+                    }
+                })
+
+                bindings.push({
+                    setter: setter,
+                    value: item[1]
+                })*/
+
+                bindings.push({
+                    inner: inner
+                })
+                break
+
             default:
                 var element = document.createElement(item[0])
                 var style = element.style
@@ -42,13 +79,10 @@ function draw(parent, model) {
                             case 'style':
                                 return new Proxy({}, {
                                     get: function(object, key) {
-                                        console.log(key)
                                         return style[key]
                                     },
 
                                     set: function(object, key, value) {
-                                        console.log(key)
-
                                         style[key] = value
                                     }
                                 })

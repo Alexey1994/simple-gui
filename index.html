@@ -10,24 +10,6 @@
     <script src="main2.js"></script>
 
     <script>
-        /*
-        draw(
-            view,
-
-            {
-                fields: {
-                    field: undefined
-                }
-            },
-
-            function(model) {
-                model.fields.push(1)
-
-                //console.log(this)
-
-                //model.fields = [{field: 'a'}, {field: 'b'}]
-            }
-        )*/
 
 /*
         var page = draw(view, [
@@ -41,6 +23,23 @@
         ])
 */
 
+        function button(parent, text) {
+            var buttonView = draw(parent, [
+                ['button', [
+                    ['text', text]
+                ]]
+            ])
+
+            var style = buttonView[0].style
+            style.padding = '10px 20px'
+            style.outline = 'none'
+            style.border = 'none'
+            style.backgroundColor = '#aaa'
+
+            return buttonView
+        }
+
+
         function otherPage(parent) {
             return draw(parent, [
                 ['text', '123']
@@ -48,13 +47,15 @@
         }
 
         var page = draw(document.querySelector('#view'), [
-            [otherPage],
-            [otherPage]
+            ['grid', [
+                [button, 'Click'],
+                [button, 'Click']
+            ]]
         ])
 
         //page[0]
 
-        page[0][0] = 'rt'
+        //page[0][0] = 'rt'
 
         //page[0] = 'Hi'
         //page[1].style.color = 'red'
