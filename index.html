@@ -23,6 +23,48 @@
         ])
 */
 
+        function Component(view, inputs, outputs, redraw) {
+            return function(parent) {
+                var viewModel = draw(parent, view, inputs, outputs, redraw)
+                return viewModel
+            }
+        }
+
+        var ButtonComponent = Component(
+            [
+                ['button', [
+                    ['text', '123']
+                ]]
+            ],
+
+            ['text'],
+            ['click'],
+
+            function(text, click) {
+                //console.log(this.view[0].element)
+                this.view[0][0] = text
+                //click(1)
+
+                this.view[0].element.onclick = function() {
+                    click()
+                }
+            }
+        )
+
+        var button = ButtonComponent(view)
+
+        button.click = function(event) {
+            //console.log('event:', event)
+            alert('clicked')
+        }
+
+        button.text = 'Hi'
+
+        /*setInterval(function() {
+            button.text = Math.random()
+        }, 1000)*/
+
+/*
         function button(parent, text) {
             var buttonView = draw(parent, [
                 ['button', [
@@ -37,22 +79,12 @@
             style.backgroundColor = '#aaa'
 
             return buttonView
-        }
-
-
-        function otherPage(parent) {
-            return draw(parent, [
-                ['text', '123']
-            ])
-        }
-
+        }*/
+/*
         var page = draw(document.querySelector('#view'), [
-            ['grid', [
-                [button, 'Click'],
-                [button, 'Click']
-            ]]
+            [ButtonComponent, ['text', 'argu']]
         ])
-
+*/
         //page[0]
 
         //page[0][0] = 'rt'

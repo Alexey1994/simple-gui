@@ -1,4 +1,4 @@
-function draw(parent, model) {
+function draw(parent, model, inputs, outputs, redraw) {
     var bindings = []
 
     model.forEach(function(item) {
@@ -88,6 +88,9 @@ function draw(parent, model) {
                                 })
                                 break
 
+                            case 'element':
+                                return element
+
                             default:
                                 return inner[key]
                         }
@@ -124,7 +127,7 @@ function draw(parent, model) {
         }
     })
 
-    return new Proxy(bindings, {
+    var proxy = new Proxy(bindings, {
         get: function(object, key) {
             return bindings[key].getter
         },
@@ -133,4 +136,77 @@ function draw(parent, model) {
             bindings[key].setter[key] = value
         }
     })
+
+    if(inputs) {
+        var outputListeners = outputs
+            .map(function(){
+                return []/*{
+                    listeners: [],
+                    sender: function(a) {
+                        console.log('send', a)
+
+                        this.listeners.forEach(function(listener) {
+                            listener(a)
+                        })
+                    }
+                }*/
+            })
+
+        var values = inputs
+            .map(function(){})
+            .concat(
+                outputs
+                    .map(function(output, index){
+                        return function(a) {
+                            outputListeners[index]
+                                .forEach(function(listener) {
+                                    listener(a)
+                                })
+                        }
+                    })
+            )
+
+        var self = {
+            view: proxy,
+            values: values,
+            changedInput: undefined
+        }
+
+        inputs.forEach(function(input) {
+            bindings[input] = {
+                setter: new Proxy({}, {
+                    get: function(object, key) {
+
+                    },
+
+                    set: function(object, key, value) {
+                        var inputIndex = inputs.indexOf(key)
+
+                        if(redraw) {
+                            self.values[inputIndex] = value
+                            self.changedInput = inputIndex
+                            redraw.apply(self, self.values)
+                        }
+                    }
+                })
+            }
+        })
+
+        outputs.forEach(function(output) {
+            bindings[output] = {
+                setter: new Proxy({}, {
+                    get: function(object, key) {
+
+                    },
+
+                    set: function(object, key, value) {
+                        var outputIndex = outputs.indexOf(key)
+                        outputListeners[outputIndex].push(value)
+                    }
+                })
+            }
+        })
+    }
+
+    return proxy
 }
