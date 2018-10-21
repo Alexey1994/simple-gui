@@ -4,101 +4,79 @@
     <title></title>
 </head>
 <body>
-    <div id="view2"></div>
     <div id="view"></div>
 
-    <script src="main2.js"></script>
+    <script src="main.js"></script>
+    <script src="components.js"></script>
 
     <script>
-
-/*
-        var page = draw(view, [
-            ['text', '123'],
-            ['div', [
-                ['text', '456'],
-                ['div', [
-                    ['text', 'green text <><<<>>>']
-                ]]
-            ]]
-        ])
-*/
-
-        function Component(view, inputs, outputs, redraw) {
-            return function(parent) {
-                var viewModel = draw(parent, view, inputs, outputs, redraw)
-                return viewModel
-            }
-        }
-
-        var ButtonComponent = Component(
+        var PageComponent = Component(
             [
-                ['button', [
-                    ['text', '123']
+                [InputComponent],
+                [ButtonComponent],
+                [GridComponent, [
+                    [ButtonComponent],
+                    [ButtonComponent],
+                    [ButtonComponent],
+                    [ButtonComponent]
                 ]]
             ],
 
-            ['text'],
-            ['click'],
+            [],
+            [],
 
-            function(text, click) {
-                //console.log(this.view[0].element)
-                this.view[0][0] = text
-                //click(1)
+            function() {
+                this.view[0].value = 'asd'
+                this.view[1].text = 'but'
 
-                this.view[0].element.onclick = function() {
-                    click()
-                }
+                this.view[2].rows = 'auto auto'
+                this.view[2].columns = 'auto auto'
+                this.view[2].gap = '10px'
+            },
+
+            function() {
+
             }
         )
 
-        var button = ButtonComponent(view)
+        var Page2Component = Component(
+            [
+                [PageComponent],
+                [PageComponent]
+            ],
 
-        button.click = function(event) {
-            //console.log('event:', event)
-            alert('clicked')
-        }
+            [],
+            [],
 
-        button.text = 'Hi'
+            function() {
 
-        /*setInterval(function() {
-            button.text = Math.random()
-        }, 1000)*/
+            },
 
-/*
-        function button(parent, text) {
-            var buttonView = draw(parent, [
-                ['button', [
-                    ['text', text]
-                ]]
-            ])
+            function() {
 
-            var style = buttonView[0].style
-            style.padding = '10px 20px'
-            style.outline = 'none'
-            style.border = 'none'
-            style.backgroundColor = '#aaa'
+            }
+        )
 
-            return buttonView
-        }*/
-/*
-        var page = draw(document.querySelector('#view'), [
-            [ButtonComponent, ['text', 'argu']]
-        ])
-*/
-        //page[0]
+        var list = ListComponent(view)
+        list.template = InputComponent //TextComponent //InputComponent
 
-        //page[0][0] = 'rt'
+        var t = []
 
-        //page[0] = 'Hi'
-        //page[1].style.color = 'red'
-        //console.log(page[1][1].style.color)
+        for(var i = 0; i < 1000; ++i)
+            t.push(i)
 
-        //page[1][1].style.color = 'green'
-        //page[1][1][0] = 'Alexey'
+        list.items = t
 
-        //page[1][0] = 'e'
+        setTimeout(function() {
+            var t = []
 
-        //setTimeout(() => page[0] = 'e', 1000)
+            for(var i = 10; i < 100; ++i)
+                t.push(i)
+
+            list.items = t
+        }, 5000)
+
+        //list.items = [1, 2]
     </script>
 </body>
 </html>
