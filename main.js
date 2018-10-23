@@ -156,18 +156,21 @@ function deleteView(view) {
             var binding = bindings[i]
 
             if(!binding)
-                return
+                break
 
             var getter = binding.getter
 
             if(getter)
                 deleteView(getter)
+
+            delete bindings[i]
         }
     }
 
-    //console.log(view.parent, view.element)
-
-    view.parent.removeChild(view.element)
+    if(view.element) {
+        //console.log(view.parent, view.element)
+        view.parent.removeChild(view.element)
+    }
 }
 
 function Component(view, inputs, outputs, init, update) {
